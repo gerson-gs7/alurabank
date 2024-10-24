@@ -1,8 +1,6 @@
-class NegociacoesView extends View {
+class NegociacoesView extends View<Negociacoes> {
 
-    update(model: Negociacoes): void {
-        this._elemento.innerHTML = this.template(model);
-    }
+    
 
     template(model: Negociacoes): string {
 
@@ -24,7 +22,7 @@ class NegociacoesView extends View {
                         <td>${negociacao.data.getDate()}/${negociacao.data.getMonth()+1}/${negociacao.data.getUTCFullYear()}</td>
                         <td>${negociacao.quantidade}</td>
                         <td>${negociacao.valor}</td>
-                        <td>${negociacao.valor}</td>
+                        <td>${negociacao.volume}</td>
                     </tr>
                 `
             ).join('')}
