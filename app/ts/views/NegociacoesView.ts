@@ -33,7 +33,6 @@
             <tfoot>
             </tfoot>
         </table>
-        <script>alert('oi')</script>
             `;
         }
     }

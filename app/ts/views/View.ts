@@ -1,3 +1,4 @@
+import { logarTempoDeExecucao } from "../helpers/decorators/index";
 //declare var $: any;
 export abstract class View<T>{
 
@@ -10,8 +11,10 @@ export abstract class View<T>{
         this._elemento = $(seletor)
         this._escapar = escapar;
     }
+    @logarTempoDeExecucao(true)
     uptade(model: T){
-
+        
+        
         let template = this.template(model);
        
         if(this._escapar){
@@ -20,6 +23,7 @@ export abstract class View<T>{
         
         this._elemento.html(template);
         //this._elemento.innerHTML = this.template(model);
+
         
     }
     abstract template(model: T): string;
