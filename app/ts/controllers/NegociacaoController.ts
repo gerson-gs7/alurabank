@@ -1,12 +1,13 @@
 import { NegociacoesView, MensagemView } from "../views/index";
-import { Negociacao, Negociacoes } from "../models/index";
-import { domInject } from "../helpers/decorators/index";
+import { Negociacao, Negociacoes, NegociacaoParcial } from "../models/index";
+import { domInject, throttle } from "../helpers/decorators/index";
+import { NegociacaoService } from "../service/index";
 
 export class NegociacaoController {
-  /*private _inputData: HTMLInputElement;
-    private _inputQuantidade: HTMLInputElement;
-    private _inputvalor: HTMLInputElement;*/
-    
+    /*private _inputData: HTMLInputElement;
+      private _inputQuantidade: HTMLInputElement;
+      private _inputvalor: HTMLInputElement;*/
+
     @domInject('#data')
     private _inputData: JQuery;
     @domInject('#quantidade')
@@ -17,8 +18,9 @@ export class NegociacaoController {
     private _negociacoes: Negociacoes = new Negociacoes();
     private _negociacoesView = new NegociacoesView('#negociacoesView');
     private _mensagensView = new MensagemView('#mensagemView');
+    private _service = new NegociacaoService();
 
-    constructor(){
+    constructor() {
         /*
         Selecionando os elementos no DOM
         this._inputData = $("#data");
@@ -27,13 +29,12 @@ export class NegociacaoController {
 
         this._negociacoesView.uptade(this._negociacoes);
     }
-    adiciona(event: Event){
+    @throttle(500)
+    adiciona() {
 
-        event.preventDefault();
+        let data = new Date(this._inputData.val().replace(/-/g, ','));
 
-        let data = new Date(this._inputData.val().replace(/-/g,','));
-        
-        if(data.getDay() == DiaDaSemana.Sabado || data.getDay() == DiaDaSemana.Domingo){
+        if (data.getDay() == DiaDaSemana.Sabado || data.getDay() == DiaDaSemana.Domingo) {
             this._mensagensView.uptade('Somente negociações em dias úteis, por favor!');
             return
         }
@@ -43,30 +44,30 @@ export class NegociacaoController {
             parseFloat(this._inputvalor.val())
         );
         this._negociacoes.adiciona(negociacao);
-        
+
         this._negociacoesView.uptade(this._negociacoes);
         this._mensagensView.uptade('Negociação adicionada com sucesso!')
 
     }
-    importaDados(){
 
-        function isOk(res: Response){
-            if(res.ok){
+    @throttle(500)
+    importaDados() {
+
+        this._service
+        .obterNegociacoes(res => {
+            if (res.ok) {
                 return res;
-            }else{
+            } else {
                 throw new Error(res.statusText);
             }
-        }
+        })
+        .then(negociacoes => {
 
-
-        fetch('http://localhost:8080/dados')
-        .then(res => isOk(res))
-        .then(res => res.json())
-        .then((dados: any[]) =>
-            dados.map(dado => new Negociacao(new Date(), dado.vezes, dado.montante))
-            .forEach(negociacao => this._negociacoes.adiciona(negociacao))
-        )
-        .catch(err => console.log(err.message));
+        
+            negociacoes.forEach(negociacao =>
+                this._negociacoes.adiciona(negociacao));
+                this._negociacoesView.uptade(this._negociacoes);
+            });
     }
 
 }
