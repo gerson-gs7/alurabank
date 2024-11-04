@@ -1,7 +1,7 @@
 import { logarTempoDeExecucao } from "../helpers/decorators/index";
-import { Negociacao } from "./Negociacao";
+import { Negociacao, Imprimivel } from "./index";
 
-export class Negociacoes {
+export class Negociacoes extends Imprimivel {
     private _negociacoes: Negociacao[] = []; 
 
     adiciona(negociacao: Negociacao): void{
@@ -10,5 +10,9 @@ export class Negociacoes {
     @logarTempoDeExecucao()
     paraArray(): Negociacao[]{
         return ([] as Negociacao[]).concat(this._negociacoes);
+    }
+
+    paraTexto(): void {
+        console.log(JSON.stringify(this._negociacoes));
     }
 }

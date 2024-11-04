@@ -1,4 +1,4 @@
-System.register(["../helpers/decorators/index"], function (exports_1, context_1) {
+System.register(["../helpers/decorators/index", "./index"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,16 +7,20 @@ System.register(["../helpers/decorators/index"], function (exports_1, context_1)
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var index_1, Negociacoes;
+    var index_1, index_2, Negociacoes;
     return {
         setters: [
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function (index_2_1) {
+                index_2 = index_2_1;
             }
         ],
         execute: function () {
-            Negociacoes = class Negociacoes {
+            Negociacoes = class Negociacoes extends index_2.Imprimivel {
                 constructor() {
+                    super(...arguments);
                     this._negociacoes = [];
                 }
                 adiciona(negociacao) {
@@ -24,6 +28,9 @@ System.register(["../helpers/decorators/index"], function (exports_1, context_1)
                 }
                 paraArray() {
                     return [].concat(this._negociacoes);
+                }
+                paraTexto() {
+                    console.log(JSON.stringify(this._negociacoes));
                 }
             };
             __decorate([
