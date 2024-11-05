@@ -53,6 +53,37 @@ export class NegociacaoController {
     }
 
     @throttle(500)
+    async importaDados() {
+        /*Implementando método async/await
+        */
+        try {
+            const negociacoesParaImportar = await this._service.obterNegociacoes(res => {
+                if (res.ok) {
+                    return res;
+                } else {
+                    throw new Error(res.statusText);
+                }
+            });
+
+            const negociacoesJaImportadas = this._negociacoes.paraArray();
+
+            negociacoesParaImportar
+                .filter(negociacao =>
+                    !negociacoesJaImportadas.some(jaImportada =>
+                        negociacao.ehIgual(jaImportada)
+                    )
+                )
+                .forEach(negociacao =>
+                    this._negociacoes.adiciona(negociacao));
+            this._negociacoesView.uptade(this._negociacoes);
+        }
+
+        catch (err) {
+            this._mensagensView.uptade(err.message)
+        }
+    }
+    /* 
+    Sem async / await
     importaDados() {
 
         this._service
@@ -63,17 +94,26 @@ export class NegociacaoController {
                 throw new Error(res.statusText);
             }
         })
-        .then(negociacoes => {
+        .then(negociacoesParaImportar => {
 
-        
-            negociacoes.forEach(negociacao =>
+            const negociacoesJaImportadas = this._negociacoes.paraArray();
+
+            negociacoesParaImportar
+                .filter(negociacao =>
+                    !negociacoesJaImportadas.some(jaImportada =>
+                        negociacao.ehIgual(jaImportada)
+                    )
+                )
+            .forEach(negociacao =>
                 this._negociacoes.adiciona(negociacao));
                 this._negociacoesView.uptade(this._negociacoes);
+            })
+            .catch(err => {
+                this._mensagensView.uptade(err.message);
             });
-    }
+    }*/
 
 }
-
 enum DiaDaSemana {
 
     Domingo, Segunda, Terca, Quarta, Quinta, Sexta, Sabado

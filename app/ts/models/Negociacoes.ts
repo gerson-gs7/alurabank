@@ -1,7 +1,7 @@
 import { logarTempoDeExecucao } from "../helpers/decorators/index";
-import { Negociacao, Imprimivel } from "./index";
+import { Negociacao, MeuObjeto } from "./index";
 
-export class Negociacoes extends Imprimivel {
+export class Negociacoes implements MeuObjeto<Negociacoes> {
     private _negociacoes: Negociacao[] = []; 
 
     adiciona(negociacao: Negociacao): void{
@@ -14,5 +14,8 @@ export class Negociacoes extends Imprimivel {
 
     paraTexto(): void {
         console.log(JSON.stringify(this._negociacoes));
+    }
+    ehIgual(negociacoes: Negociacoes): boolean {
+        return JSON.stringify(this._negociacoes) == JSON.stringify(negociacoes.paraArray());
     }
 }
